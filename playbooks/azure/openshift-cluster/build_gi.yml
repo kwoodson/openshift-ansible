@@ -35,6 +35,10 @@
     - name: client-key.pem
       content: "{{ yum_client_key_contents }}"
 
+  - name: setup yum repositories
+    import_role:
+      name: openshift_repos
+
 - import_playbook: ../../openshift-node/private/image_prep.yml
 
 # NOTE: this isn't available until ansible 2.5
