@@ -3,7 +3,7 @@ definition:
   offer:
     microsoft-azure-marketplace-testdrive.enabled: false
     microsoft-azure-marketplace-testdrive.videos: []
-    microsoft-azure-marketplace.allowedSubscriptions: {{ openshift_azure_templ_allowed_subscriptions }}
+    microsoft-azure-marketplace.allowedSubscriptions: {{ openshift_azure_templ_allowed_subscriptions | to_json }}
     microsoft-azure-marketplace.blobLeadConfiguration: {}
     microsoft-azure-marketplace.categories: [appInfrastructure]
     microsoft-azure-marketplace.crmLeadConfiguration: {}
@@ -21,7 +21,7 @@ definition:
     microsoft-azure-marketplace.mediumLogo: "{{ openshift_azure_templ_medium_logo }}"
     microsoft-azure-marketplace.smallLogo: "{{ openshift_azure_templ_small_logo }}"
     microsoft-azure-marketplace.wideLogo: "{{ openshift_azure_templ_wide_logo }}"
-    microsoft-azure-marketplace.offerMarketingUrlIdentifier: {{ openshift_azure_templ_offer_id }}
+    microsoft-azure-marketplace.offerMarketingUrlIdentifier: {{ openshift_azure_templ_marketing_url_id }}
     microsoft-azure-marketplace.privacyURL: "{{ openshift_azure_templ_privacy_url }}"
     microsoft-azure-marketplace.publicAzureSupportUrl: ''
     microsoft-azure-marketplace.salesForceLeadConfiguration: {}
@@ -45,7 +45,7 @@ definition:
     microsoft-azure-virtualmachines.operationSystem: {{ openshift_azure_templ_os }}
     microsoft-azure-virtualmachines.osType: {{ openshift_azure_templ_os_type }}
     microsoft-azure-virtualmachines.recommendedVMSizes: [ds3-standard-v2]
-    microsoft-azure-virtualmachines.skuDescription: {{ openshift_azure_templ_description }}
+    microsoft-azure-virtualmachines.skuDescription: {{ openshift_azure_templ_sku_description }}
     microsoft-azure-virtualmachines.skuSummary: {{ openshift_azure_templ_summary }}
     microsoft-azure-virtualmachines.skuTitle: {{ openshift_azure_templ_title }}
     microsoft-azure-virtualmachines.vmImages: {{ openshift_azure_templ_vm_images | from_yaml}}

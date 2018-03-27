@@ -1,0 +1,15 @@
+#!/usr/bin/ansible-playbook
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - import_role:
+      name: openshift_azure
+      tasks_from: copy_md_to_vhd
+
+  - import_role:
+      name: openshift_azure
+      tasks_from: create_offer
+    vars:
+      openshift_azure_templ_os_vhd_url: "{{ openshift_azure_sas_urls[0] }}"
+      openshift_azure_templ_data_vhd_url: "{{ openshift_azure_sas_urls[1] }}"

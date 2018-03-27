@@ -104,6 +104,7 @@ openshift_azure_acsengine_template_edits: []
 
 # image publishing variables
 # openshift_azure_offer:
+openshift_azure_offer_force: False
 
 # offer template params #
 # openshift_azure_templ_display_text:
@@ -130,6 +131,7 @@ openshift_azure_acsengine_template_edits: []
 # openshift_azure_templ_os_type:
 # openshift_azure_templ_description:
 # openshift_azure_templ_summary:
+# openshift_azure_templ_marketing_url_id:
 # openshift_azure_templ_data_vhd_url:
 # openshift_azure_templ_os_vhd_url:
 # openshift_azure_templ_version:

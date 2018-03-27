@@ -1,5 +1,28 @@
 ---
+- name: fetch the current offer and update the versions
+  oo_azure_rm_publish_image_facts:
+    offer: "{{ openshift_azure_offer }}"
+  register: offerout
+
+- debug:
+    msg: "{{ offerout['data']['definition']['plans'][0]['microsoft-azure-virtualmachines.vmImages'] }}"
+    verbosity: 1
+
+- name: bring along the previous offer versions and combine with incoming
+  yedit:
+    content: "{{ lookup('template', 'offer.yml.j2') }}"
+    key: "definition#plans[0]#microsoft-azure-virtualmachines.vmImages#{{ item.key }}"
+    value: "{{ item.value }}"
+    separator: '#'
+  with_dict: "{{ offerout['data']['definition']['plans'][0]['microsoft-azure-virtualmachines.vmImages'] }}"
+  register: yeditout
+
+- debug:
+    var: yeditout
+    verbosity: 1
+
 - name: create an offer in cloudpartner portal
   oo_azure_rm_publish_image:
     offer: "{{ openshift_azure_offer }}"
     offer_data: "{{ lookup('template', 'offer.yml.j2') | from_yaml }}"
+    force: "{{ openshift_azure_offer_force }}"

@@ -1,0 +1,117 @@
+---
+- debug:
+    msg: "{{ openshift_azure_vm_name }}"
+    verbosity: 1
+
+- name: find the disk
+  azure_rm_managed_disk_facts:
+    resource_group: "{{ openshift_azure_resource_group_name }}"
+    name: "{{ item }}"
+  register: diskout
+  with_items:
+  - "{{ openshift_azure_vm_name }}.vhd"
+  - "{{ openshift_azure_vm_name }}-datadisk-0"
+
+- name: set the diskid as a fact
+  set_fact:
+    l_managed_disk_ids: "{{ diskout | json_query('results[*].ansible_facts.azure_managed_disk[0].id') }}"
+
+- debug:
+    msg: "{{ l_managed_disk_ids }}"
+    verbosity: 1
+
+- name: create a SAS url
+  command: "az disk grant-access --ids {{ item }} --duration-in-seconds 3600 --output=json"
+  register: grantout
+  with_items: "{{ l_managed_disk_ids }}"
+
+- debug:
+    var: grantout
+    verbosity: 1
+
+- name: parse json and set sas_data_list
+  set_fact:
+    l_sas_data_list: "{{ grantout | json_query('results[*].stdout') | openshift_azure_convert_list_to_json }}"
+
+- debug:
+    var: l_sas_data_list
+    verbosity: 1
+
+# currently storage account calls do not return the connection string
+# https://github.com/ansible/ansible/issues/37934
+# - name: fetch connection string for storage account
+#  azure_rm_storageaccount_facts:
+#    resource_group: "{{ openshift_azure_resource_group_name }}"
+#    name: "{{ openshift_azure_storage_account_name }}"
+#  register: storageout
+- name: fetch the connection string
+  command: "az storage account show-connection-string --name {{ openshift_azure_storage_account_name }} --resource-group {{ openshift_azure_resource_group_name }} --output=json"
+  register: sa_conn
+
+- name: pick out the connection string
+  set_fact:
+    l_connection_string: "{{ sa_conn.stdout | from_json | json_query('connectionString') }}"
+
+- debug:
+    var: l_connection_string
+    verbosity: 1
+
+# this doesn't currently support uploading a disk from a SAS url
+#- name: copy blob from managed disk to storage account
+#  azure_rm_storageblob:
+#    resource_group: "{{ openshift_azure_resource_group_name }}"
+#    storage_account_name: "{{ openshift_azure_storage_account_name }}"
+#    container: "{{ openshift_azure_storage_account_container }}"
+#    #dest: "{{ openshift_azure_vm_name }}.vhd"
+#    blob: "{{ openshift_azure_vm_name }}.vhd"
+#    src: "{{ l_sas_data_list.accessSas }}"
+#  register: blobout
+#
+#- debug: var=blobout
+
+- name: copy the vhd to a blob
+  command: "az storage blob copy start --destination-blob {{ item.name }} --destination-container {{ openshift_azure_storage_account_container }} --connection-string {{ l_connection_string }} --source-uri {{ item.sas }} --output=json"
+  register: copyout
+  with_items:
+  - name: "{{ openshift_azure_vm_name }}.vhd"
+    sas: "{{ l_sas_data_list[0].accessSas }}"
+  - name: "{{ openshift_azure_vm_name }}-datadisk-0.vhd"
+    sas: "{{ l_sas_data_list[1].accessSas }}"
+  async: 600
+  poll: 0
+
+- name: check status of copy
+  command: "az storage blob show --name {{ item }} --container-name {{ openshift_azure_storage_account_container }} --connection-string '{{ l_connection_string }}' --output=json"
+  register: copystatus
+  with_items:
+  - "{{ openshift_azure_vm_name }}.vhd"
+  - "{{ openshift_azure_vm_name }}-datadisk-0.vhd"
+  until: copystatus.stdout | from_json | json_query('properties.copy.status') == 'success'
+  retries: 60
+  delay: 30
+
+- name: set start and expire dates
+  set_fact:
+    sas_expire: "{{ lookup('pipe', 'date -d \"14 days\" +\"%Y-%m-%dT%H:%M:00Z\"') }}"
+    sas_start: "{{ lookup('pipe', 'date -d \"3 days ago\" +\"%Y-%m-%dT%H:%M:00Z\"') }}"
+    disks:
+    - "{{ openshift_azure_vm_name }}.vhd"
+    - "{{ openshift_azure_vm_name }}-datadisk-0.vhd"
+
+- name: generate sas url for the container
+  command: |
+    az storage container generate-sas --name {{ openshift_azure_storage_account_container }} --account-name {{ openshift_azure_storage_account_name }} --permissions rl --expiry {{ sas_expire }} --start {{ sas_start }} --output=json
+  register: sasurl
+
+- debug:
+    var: sasurl
+    verbosity: 1
+
+- name: set the sas URLS
+  set_fact:
+    openshift_azure_sas_urls: "{{ openshift_azure_sas_urls|default([]) + ['https://' + openshift_azure_storage_account_name + '.blob.core.windows.net/' + openshift_azure_storage_account_container + '/' + item + '?' + sasurl.stdout|from_json] }}"
+  loop: "{{ disks }}"
+
+- debug:
+    var: openshift_azure_sas_urls
+    verbosity: 1

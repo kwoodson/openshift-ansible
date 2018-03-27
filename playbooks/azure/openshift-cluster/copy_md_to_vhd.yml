@@ -1,0 +1,8 @@
+#!/usr/bin/ansible-playbook
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - import_role:
+      name: openshift_azure
+      tasks_from: copy_md_to_vhd.yml
