@@ -1,0 +1,5 @@
+---
+- name: create an offer in cloudpartner portal
+  oo_azure_rm_publish_image:
+    offer: "{{ openshift_azure_offer }}"
+    offer_data: "{{ lookup('template', 'offer.yml.j2') | from_yaml }}"
