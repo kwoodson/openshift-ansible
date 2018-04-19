@@ -11,10 +11,12 @@ openshift_azure_base_image_ns: "{{ openshift_azure_resource_group_name }}"
 
 openshift_azure_image_build_base: "{{ not (openshift_node_bootstrap | default(False)) }}"
 
+openshift_azure_base_image_query_starts_with: "{{ 'rhel7.4-base-' if openshift_deployment_type == 'openshift-enterprise' else 'centosbase-' }}"
+openshift_azure_image_query_starts_with: "{{ 'openshift-gi-' if openshift_deployment_type == 'openshift-enterprise' else 'origin-gi-' }}"
 openshift_azure_base_image_query: |
-  az image list -g {{ openshift_azure_base_image_ns | quote }} -o json --query "[?starts_with(name, 'rhel7.4-base-')].name | sort(@) | reverse(@) | [0]" | tr -d '"'
+  az image list -g {{ openshift_azure_base_image_ns | quote }} -o json --query "[?starts_with(name, '{{ openshift_azure_base_image_query_starts_with }}')].name | sort(@) | reverse(@) | [0]" | tr -d '"'
 openshift_azure_image_query: |
-  az image list -g {{ openshift_azure_resource_group_name | quote }} -o json --query "[?starts_with(name, 'openshift-gi-')].name | sort(@) | reverse(@) | [0]" | tr -d '"'
+  az image list -g {{ openshift_azure_resource_group_name | quote }} -o json --query "[?starts_with(name, '{{ openshift_azure_image_query_starts_with }}')].name | sort(@) | reverse(@) | [0]" | tr -d '"'
 openshift_azure_base_image: "{{ lookup('pipe', openshift_azure_base_image_query) }}"
 openshift_azure_image: "{{ lookup('pipe', openshift_azure_image_query) }}"
 
