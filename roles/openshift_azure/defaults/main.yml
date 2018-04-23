@@ -101,3 +101,41 @@ openshift_azure_acsengine_template_image_name: "{{ openshift_azure_image }}"
 openshift_azure_acsengine_template_image_rg: "{{ openshift_azure_base_image_ns }}"
 
 openshift_azure_acsengine_template_edits: []
+
+# image publishing variables
+# openshift_azure_offer:
+
+# offer template params #
+# openshift_azure_templ_display_text:
+# openshift_azure_templ_allowed_subscriptions: []
+# openshift_azure_templ_description:
+# openshift_azure_templ_hero_logo:
+# openshift_azure_templ_large_logo:
+# openshift_azure_templ_medium_logo:
+# openshift_azure_templ_small_logo:
+# openshift_azure_templ_wide_logo:
+# openshift_azure_templ_offer_id: "{{ openshift_azure_offer }}"
+# openshift_azure_templ_plan_id:
+# openshift_azure_templ_publisher:
+# openshift_azure_templ_privacy_url:
+# openshift_azure_templ_eng_contact_email:
+# openshift_azure_templ_eng_contact:
+# openshift_azure_templ_eng_contact_phone:
+# openshift_azure_templ_support_contact_email:
+# openshift_azure_templ_support_contact:
+# openshift_azure_templ_support_contact_phone:
+# openshift_azure_templ_tou:
+# openshift_azure_templ_title:
+# openshift_azure_templ_os:
+# openshift_azure_templ_os_type:
+# openshift_azure_templ_description:
+# openshift_azure_templ_summary:
+# openshift_azure_templ_data_vhd_url:
+# openshift_azure_templ_os_vhd_url:
+# openshift_azure_templ_version:
+# openshift_azure_templ_vm_images: |
+#   "{{ openshift_azure_templ_version }}":
+#     lunVhdDetails:
+#     - lunNumber: '0'
+#       lunVhdUrl: '{{ openshift_azure_templ_data_vhd_url}}'
+#     osVhdUrl: "{{ openshift_azure_templ_os_vhd_url }}"

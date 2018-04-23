@@ -1,0 +1,62 @@
+definition:
+  displayText: {{ openshift_azure_templ_display_text }}
+  offer:
+    microsoft-azure-marketplace-testdrive.enabled: false
+    microsoft-azure-marketplace-testdrive.videos: []
+    microsoft-azure-marketplace.allowedSubscriptions: {{ openshift_azure_templ_allowed_subscriptions }}
+    microsoft-azure-marketplace.blobLeadConfiguration: {}
+    microsoft-azure-marketplace.categories: [appInfrastructure]
+    microsoft-azure-marketplace.crmLeadConfiguration: {}
+    microsoft-azure-marketplace.description: {{ openshift_azure_templ_description }}
+    microsoft-azure-marketplace.engineeringContactEmail: {{ openshift_azure_templ_eng_contact_email }}
+    microsoft-azure-marketplace.engineeringContactName: {{ openshift_azure_templ_eng_contact }}
+    microsoft-azure-marketplace.engineeringContactPhone: {{ openshift_azure_templ_eng_contact_phone }}
+    microsoft-azure-marketplace.fairfaxSupportUrl: ''
+    microsoft-azure-marketplace.httpsEndpointLeadConfiguration: {}
+    microsoft-azure-marketplace.leadDestination: None
+    microsoft-azure-marketplace.longSummary: Openshift Origin on CentOS
+    microsoft-azure-marketplace.marketoLeadConfiguration: {}
+    microsoft-azure-marketplace.heroLogo: "{{ openshift_azure_templ_hero_logo }}"
+    microsoft-azure-marketplace.largeLogo: "{{ openshift_azure_templ_large_logo }}"
+    microsoft-azure-marketplace.mediumLogo: "{{ openshift_azure_templ_medium_logo }}"
+    microsoft-azure-marketplace.smallLogo: "{{ openshift_azure_templ_small_logo }}"
+    microsoft-azure-marketplace.wideLogo: "{{ openshift_azure_templ_wide_logo }}"
+    microsoft-azure-marketplace.offerMarketingUrlIdentifier: {{ openshift_azure_templ_offer_id }}
+    microsoft-azure-marketplace.privacyURL: "{{ openshift_azure_templ_privacy_url }}"
+    microsoft-azure-marketplace.publicAzureSupportUrl: ''
+    microsoft-azure-marketplace.salesForceLeadConfiguration: {}
+    microsoft-azure-marketplace.screenshots: []
+    microsoft-azure-marketplace.summary: {{ openshift_azure_templ_summary }}
+    microsoft-azure-marketplace.supportContactEmail: {{ openshift_azure_templ_support_contact_email }}
+    microsoft-azure-marketplace.supportContactName: {{ openshift_azure_templ_support_contact }}
+    microsoft-azure-marketplace.supportContactPhone: {{ openshift_azure_templ_support_contact_phone }}
+    microsoft-azure-marketplace.tableLeadConfiguration: {}
+    microsoft-azure-marketplace.termsOfUse: {{ openshift_azure_templ_tou }}
+    microsoft-azure-marketplace.title: {{ openshift_azure_templ_title }}
+    microsoft-azure-marketplace.usefulLinks: []
+    microsoft-azure-marketplace.videos: []
+  plans:
+  - microsoft-azure-virtualmachines.certificationsFairfax: []
+    microsoft-azure-virtualmachines.cloudAvailability: [PublicAzure, Fairfax]
+    microsoft-azure-virtualmachines.hideSKUForSolutionTemplate: true
+    microsoft-azure-virtualmachines.isPrivateOffer: false
+    microsoft-azure-virtualmachines.openPorts: []
+    microsoft-azure-virtualmachines.operatingSystemFamily: Linux
+    microsoft-azure-virtualmachines.operationSystem: {{ openshift_azure_templ_os }}
+    microsoft-azure-virtualmachines.osType: {{ openshift_azure_templ_os_type }}
+    microsoft-azure-virtualmachines.recommendedVMSizes: [ds3-standard-v2]
+    microsoft-azure-virtualmachines.skuDescription: {{ openshift_azure_templ_description }}
+    microsoft-azure-virtualmachines.skuSummary: {{ openshift_azure_templ_summary }}
+    microsoft-azure-virtualmachines.skuTitle: {{ openshift_azure_templ_title }}
+    microsoft-azure-virtualmachines.vmImages: {{ openshift_azure_templ_vm_images | from_yaml}}
+    parentId: null
+    planId: {{ openshift_azure_templ_plan_id }}
+    regions: [DZ, AR, AU, AT, BH, BY, BE, BR, BG, CA, CL, CO, CR, HR, CY, CZ, DK,
+      DO, EC, EG, SV, EE, FI, FR, DE, GR, GT, HK, HU, IS, IN, ID, IE, IL, IT, JP,
+      JO, KZ, KE, KR, KW, LV, LI, LT, LU, MK, MY, MT, MX, ME, MA, NL, NZ, NG, 'NO',
+      OM, PK, PA, PY, PE, PH, PL, PT, PR, QA, RO, RU, SA, RS, SG, SK, SI, ZA, ES,
+      LK, SE, CH, TW, TH, TT, TN, TR, UA, AE, GB, US, UY, VE]
+    virtualMachinePricing: {freeTrialDurationInMonths: 0, isByol: true}
+id: {{ openshift_azure_templ_offer_id }}
+offerTypeId: microsoft-azure-virtualmachines
+publisherId: {{ openshift_azure_templ_publisher }}
