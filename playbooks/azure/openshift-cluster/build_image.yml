@@ -27,6 +27,7 @@
     when:
     - oreg_auth_password is not defined
     - openshift_registry_token_api_auth_password is defined
+    - openshift_deployment_type == 'openshift-enterprise'
 
 - name: prepare node image
   hosts: nodes
@@ -42,6 +43,7 @@
     when:
     - oreg_auth_password is not defined
     - openshift_registry_token_api_auth_password is defined
+    - openshift_deployment_type == 'openshift-enterprise'
   - name: set the user to perform installation
     set_fact:
       ansible_ssh_user: "{{ openshift_azure_vm_admin_username | default(ansible_ssh_user) }}"
